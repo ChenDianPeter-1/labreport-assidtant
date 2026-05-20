@@ -41,7 +41,7 @@ description: |
 - `lab-report-analysis` 产出的 confirmed analysis outputs；
 - `nature-figure` 或 figure 模块产出的 approved figures。
 
-`reference/` 的默认位置是当前实验文件夹内：
+每个实验文件夹使用固定工作结构。开始预习报告或后续写作前，先检查并创建缺失目录：
 
 ```text
 experiment/
@@ -52,9 +52,17 @@ experiment/
 `-- reports/
 ```
 
-预习报告阶段可以协助用户检索权威实验资料、教材资料、标准方法或相关文献，并把可用于写作的出处、摘要和引用建议整理到当前实验的 `reference/` 中。若 `reference/` 不存在，先建议创建该文件夹；除非用户确认，不要把检索资料散落到项目根目录或其他实验文件夹。
+目录用途：
 
-参考资料只能用于补充背景、原理解释和参考来源，不得覆盖当前实验讲义的要求，不得代替 `lab-report-analysis` 的数据处理结果。
+- `source/`: 讲义、实验记录、原始图片、模板等原始材料。
+- `reference/`: 权威实验资料、教材资料、标准方法、文献笔记和引用清单。
+- `analysis/`: `lab-report-analysis` 产出的 confirmed analysis outputs。
+- `figures/`: approved figures。
+- `reports/`: 预习报告、后续报告和最终整合文件。
+
+若当前实验文件夹中讲义或模板已直接放在根目录，不要擅自移动旧文件；只创建缺失目录，并把新生成文件放入对应目录。
+
+参考资料只能用于补充背景、原理解释、方法依据和参考来源，不得覆盖当前实验讲义的要求，不得代替 `lab-report-analysis` 的数据处理结果。
 
 常见 confirmed analysis outputs 包括：
 
@@ -108,16 +116,19 @@ experiment/
 
 ## Prelab Workflow
 
-当用户选择“预习报告”时，本模块可以直接执行以下流程：
+当用户选择“预习报告”时，必须按以下流程执行，不得跳步：
 
-1. 确认实验名称或实验编号。
-2. 阅读当前实验文件夹中的讲义、模板和格式要求。
-3. 检查当前实验文件夹是否已有 `reference/`。
-4. 如果`/referrence/`里面没有任何参考文件则需要补充参考资料，检索权威实验、教材资料、标准方法或相关文献
-5. 告诉用户找到了什么文献，文献的名字、作者、doi号以及对实验有什么帮助，并告诉用户你需要下载并保存到 `reference/`。
-6. 提取讲义中的目的要求、仪器与试剂、实验原理、实验步骤。
-7. 生成 HTML 预习报告，默认输出到当前实验文件夹的 `reports/prelab.html`。
-8. 暂停给用户确认，必要时按模板或教师要求修改。
+1. 确认实验名称或实验编号，并定位唯一的当前实验文件夹。
+2. 检查并创建缺失目录：`source/`、`reference/`、`analysis/`、`figures/`、`reports/`。
+3. 阅读当前实验文件夹中的讲义、模板和格式要求。
+4. 检查 `reference/` 是否已有可用资料。
+5. 如果 `reference/` 为空或缺少本实验相关资料，先检索权威实验资料、教材资料、标准方法或相关文献。
+6. 向用户列出检索到的候选资料：标题、作者或机构、年份、DOI 或 URL、可信度、对本实验预习报告的用途。
+7. 将可用参考资料整理到当前实验文件夹的 `reference/` 中，至少生成 `reference/reference-notes.md`。如能合法下载或保存开放资料，再保存到 `reference/`；不能下载全文时，只保存出处、摘要、链接和使用建议。
+8. 提取讲义中的目的要求、仪器与试剂、实验原理、实验步骤。
+9. 生成一个本地 HTML 文件，默认路径为当前实验文件夹的 `reports/prelab.html`。
+10. 输出时只报告本地 HTML 文件路径，不要把它称为“网站”。
+11. 暂停给用户确认，必要时按模板或教师要求修改。
 
 各章节写作原则：
 
@@ -135,6 +146,7 @@ experiment/
 - HTML 应包含实验目的、实验原理、仪器与试剂、实验步骤四个主体部分。
 - 公式用 MathJax 或 KaTeX 兼容的 LaTeX 表达。
 - 如使用 `reference/` 中资料，应在 HTML 末尾加入“参考资料”小节。
+- 生成的是可直接打开的本地 `.html` 文件；不要创建站点项目、不要启动服务器、不要把输出称为网站。
 - 不得把 `reference/` 中的文献值、理论值或外部实验结果写成当前实验的实测结果。
 
 ## Postlab Writing Workflow
@@ -142,12 +154,14 @@ experiment/
 当用户选择“后续报告”或“最终报告整合”时，按以下流程执行：
 
 1. 确认实验名称、报告模板和用户要写的章节。
-2. 检查是否存在 `lab-report-analysis` 的 confirmed outputs。
-3. 若 confirmed outputs 不完整，停止并说明应先交给 `lab-report-analysis` 的任务。
-4. 若涉及图形，检查是否存在 approved figures 或 figure handoff package。
-5. 基于已确认的结果撰写实验记录说明、结果讨论、结论和思考题。
-6. 整合为模板要求的 HTML 或 Markdown 片段。
-7. 暂停给用户确认。
+2. 检查并创建缺失目录：`source/`、`reference/`、`analysis/`、`figures/`、`reports/`。
+3. 阅读 `reference/` 中的资料索引或笔记，识别哪些只能用于背景，哪些可用于方法依据，哪些可用于结果讨论中的外部参考。
+4. 检查是否存在 `lab-report-analysis` 的 confirmed outputs。
+5. 若 confirmed outputs 不完整，停止并说明应先交给 `lab-report-analysis` 的任务。
+6. 若涉及图形，检查是否存在 approved figures 或 figure handoff package。
+7. 基于已确认的结果撰写实验记录说明、结果讨论、结论和思考题。
+8. 整合为模板要求的本地 HTML 文件或用户指定的报告片段；默认最终整合文件放入 `reports/`。
+9. 暂停给用户确认。
 
 结果讨论应包含：
 
@@ -156,6 +170,13 @@ experiment/
 - 由 `lab-report-analysis` 提供依据的误差来源；
 - 基于已确认分析结果的改进建议；
 - 简短结论。
+
+`reference/` 在后续报告中的使用规则：
+
+- 可用于解释实验背景、方法原理、标准实验条件、理论预期和参考来源。
+- 只有当 `lab-report-analysis` 明确要求或用户确认时，才可把外部文献值用于对比讨论。
+- 文献值必须标明来源，不得伪装成当前实验数据。
+- 相对误差、不确定度和拟合参数必须来自 `lab-report-analysis`，不得由 writing 模块根据文献自行计算。
 
 不得自行补充文献值、相对误差、不确定度、异常原因或实验现象。
 
