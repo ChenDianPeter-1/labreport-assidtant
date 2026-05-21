@@ -1,0 +1,15 @@
+# Ignore everything by default.
+*
+
+# Keep this ignore policy tracked.
+!.gitignore
+
+# Track only the lab-report-master skill.
+!.agents/
+!.agents/skills/
+!.agents/skills/lab-report-master/
+!.agents/skills/lab-report-master/**
+
+# Never track generated Python caches inside the skill.
+.agents/skills/lab-report-master/**/__pycache__/
+.agents/skills/lab-report-master/**/*.py[cod]
