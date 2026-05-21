@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>预习报告 v2：旋光法测定蔗糖转化反应的速率常数</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root {
+      --ink: #1f2933;
+      --muted: #5c6672;
+      --line: #d6dde6;
+      --soft: #f6f8fb;
+      --accent: #225c72;
+      --accent-soft: #e8f1f4;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #fff;
+      font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.72;
+    }
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 36px 42px 58px;
+    }
+    h1 {
+      margin: 0;
+      text-align: center;
+      font-size: 26px;
+      line-height: 1.35;
+      letter-spacing: 0;
+    }
+    .subtitle {
+      margin: 8px 0 28px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    h2 {
+      margin: 30px 0 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--accent);
+      font-size: 20px;
+    }
+    h3 {
+      margin: 20px 0 8px;
+      font-size: 17px;
+    }
+    p { margin: 8px 0; }
+    ol, ul { margin: 8px 0 8px 24px; padding: 0; }
+    li { margin: 4px 0; }
+    .template-note {
+      margin: 14px 0 18px;
+      padding: 10px 12px;
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      color: #203946;
+      font-size: 14px;
+    }
+    .formula {
+      margin: 12px 0;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      background: #fbfcfd;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      margin: 12px 0 20px;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    caption {
+      caption-side: top;
+      margin-bottom: 6px;
+      text-align: left;
+      font-weight: 700;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    th {
+      background: var(--soft);
+      font-weight: 700;
+    }
+    .left { text-align: left; }
+    .blank { color: #8a96a3; }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 12px 0 18px;
+    }
+    .step {
+      min-height: 76px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      background: #fbfcfd;
+    }
+    .step strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #174f66;
+    }
+    code {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.95em;
+    }
+    @media (max-width: 760px) {
+      main { padding: 28px 18px 44px; }
+      .flow { grid-template-columns: 1fr; }
+    }
+    @media print {
+      main { max-width: none; padding: 20mm 18mm; }
+      h2, h3, table, .step { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>旋光法测定蔗糖转化反应的速率常数</h1>
+  <p class="subtitle">预习报告 v2</p>
+
+  <section>
+    <h2>1. 实验目的</h2>
+    <div class="template-note">对应模板要求：简明写出实验目的，并说明通过哪些测量、计算或图像关系得到核心结论。</div>
+    <ol>
+      <li>测定蔗糖转化反应的速率常数 \(k\) 和半衰期 \(t_{1/2}\)。</li>
+      <li>了解蔗糖转化反应中反应物浓度与旋光度之间的关系。</li>
+      <li>了解旋光仪的基本原理，掌握 WZZ-2B 自动旋光仪的正确使用方法。</li>
+    </ol>
+    <p>本实验的核心测量量为不同时间 \(t\) 下反应体系的旋光度 \(\alpha_t\) 和反应终了旋光度 \(\alpha_\infty\)。后续通过计算 \(\ln(\alpha_t-\alpha_\infty)\)，并作 \(\ln(\alpha_t-\alpha_\infty)-t\) 直线，由斜率求得速率常数 \(k\)，再计算半衰期 \(t_{1/2}\)。</p>
+  </section>
+
+  <section>
+    <h2>2. 实验原理</h2>
+    <div class="template-note">对应模板要求：说明主要原理，写出与后续数据处理直接相关的公式、符号含义和适用条件。</div>
+
+    <p>蔗糖在酸催化下水解生成葡萄糖和果糖：</p>
+    <div class="formula">
+      \[
+      \mathrm{C_{12}H_{22}O_{11}+H_2O \rightarrow C_6H_{12}O_6+C_6H_{12}O_6}
+      \]
+    </div>
+    <p>实验中水大量存在，\(\mathrm{H^+}\) 只起催化作用且浓度近似不变，因此蔗糖转化反应可按准一级反应处理。一级反应的速率方程和积分式为：</p>
+    <div class="formula">
+      \[
+      -\frac{dc_A}{dt}=kc_A
+      \]
+      \[
+      \ln c_A=\ln c_A^0-kt
+      \]
+    </div>
+    <p>蔗糖、葡萄糖和果糖均有旋光性，但旋光能力不同。随着反应进行，体系旋光度会随组成变化而改变；在温度、光源波长、溶剂和样品管长度固定时，旋光度与浓度成正比：</p>
+    <div class="formula">
+      \[
+      \alpha=Kc
+      \]
+    </div>
+    <p>设起始旋光度为 \(\alpha_0\)，时间 \(t\) 时旋光度为 \(\alpha_t\)，反应终了旋光度为 \(\alpha_\infty\)。由于 \(\alpha_t-\alpha_\infty\) 与尚未反应的蔗糖浓度成正比，可得本实验的数据处理式：</p>
+    <div class="formula">
+      \[
+      \ln(\alpha_t-\alpha_\infty)=\ln(\alpha_0-\alpha_\infty)-kt
+      \]
+    </div>
+    <p>作 \(\ln(\alpha_t-\alpha_\infty)\) 对 \(t\) 的直线图，斜率为 \(-k\)。得到 \(k\) 后可由 \(t_{1/2}=\ln2/k\) 计算半衰期。式中 \(c_A\) 为时间 \(t\) 时蔗糖浓度，\(c_A^0\) 为初始蔗糖浓度，\(k\) 为速率常数。本预习报告只给出处理依据，不进行正式拟合或结果计算。</p>
+  </section>
+
+  <section>
+    <h2>3. 实验装置、设备及试剂</h2>
+    <div class="template-note">对应模板要求：列出主要装置、设备和试剂；必要时提供实验装置示意图。</div>
+    <table>
+      <caption>表1 主要设备与试剂</caption>
+      <thead>
+        <tr>
+          <th>类别</th>
+          <th>名称或规格</th>
+          <th>实验用途</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>仪器</td>
+          <td>WZZ-2B 自动旋光仪、样品管、秒表、恒温槽</td>
+          <td class="left">测定旋光度、记录反应时间并控制反应温度。</td>
+        </tr>
+        <tr>
+          <td>器皿</td>
+          <td>量筒、锥形瓶</td>
+          <td class="left">量取并混合蔗糖溶液和盐酸溶液。</td>
+        </tr>
+        <tr>
+          <td>试剂</td>
+          <td>蔗糖溶液 20 g/100 mL、盐酸 3 N、蒸馏水</td>
+          <td class="left">蔗糖为反应物；盐酸提供酸催化条件；蒸馏水用于清洗样品管和仪器清零。</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>4. 实验步骤（预习准备工作）</h2>
+    <div class="template-note">对应模板要求：用流程或分步说明实验流程，标出关键点、难点、待观察现象和待测数据；不写正式结果。</div>
+
+    <h3>4.1 实验流程</h3>
+    <div class="flow">
+      <div class="step"><strong>准备</strong>取干燥锥形瓶，恒温槽调至 \(55^\circ\mathrm{C}\)。</div>
+      <div class="step"><strong>仪器清零</strong>旋光仪预热 10 min，用蒸馏水测定旋光度并清零。</div>
+      <div class="step"><strong>启动反应</strong>混合蔗糖溶液和盐酸溶液，迅速装样并开始计时。</div>
+      <div class="step"><strong>定时测量</strong>每隔 2 min 测一次 \(\alpha_t\)，直至 30 min。</div>
+      <div class="step"><strong>终了旋光度</strong>用加热后的溶液洗涮样品管后测 \(\alpha_\infty\)，共测 5 次。</div>
+      <div class="step"><strong>整理记录</strong>记录室温、压强、\(\alpha_t\)、\(\alpha_\infty\) 和操作异常。</div>
+      <div class="step"><strong>后续处理</strong>确认数据后计算 \(\ln(\alpha_t-\alpha_\infty)\)，再由图线斜率求 \(k\)。</div>
+      <div class="step"><strong>收尾</strong>清洗器皿，样品管注入蒸馏水后放回旋光仪。</div>
+    </div>
+
+    <h3>4.2 关键点、难点与待观察内容</h3>
+    <ul>
+      <li>混合盐酸和蔗糖溶液后要快速摇匀、洗涮样品管、装样和开始计时，减少起始阶段时间误差。</li>
+      <li>样品管必须洗净并装满，避免气泡影响旋光度读数。</li>
+      <li>测量正值旋光度时使用“+复测”，测量负值旋光度时使用“-复测”。</li>
+      <li>需要观察并记录旋光度随时间逐渐减小的趋势，以及读数是否出现异常跳变。</li>
+      <li>待测数据包括实验室温度、压强、各时间点 \(\alpha_t\) 和 5 次终了旋光度 \(\alpha_\infty\)。</li>
+    </ul>
+
+    <h3>4.3 原始数据记录表</h3>
+    <table>
+      <caption>表2 反应过程中旋光度记录表</caption>
+      <tbody>
+        <tr>
+          <th>时间 / min</th>
+          <td>2</td><td>4</td><td>6</td><td>8</td><td>10</td><td>12</td><td>14</td><td>16</td>
+        </tr>
+        <tr>
+          <th>\(\alpha_t\) / 度</th>
+          <td class="blank">待测</td><td class="blank">待测</td><td class="blank">待测</td><td class="blank">待测</td><td class="blank">待测</td><td class="blank">待测</td><td class="blank">待测</td><td class="blank">待测</td>
+        </tr>
+        <tr>
+          <th>时间 / min</th>
+          <td>18</td><td>20</td><td>22</td><td>24</td><td>26</td><td>28</td><td>30</td><td></td>
+        </tr>
+        <tr>
+          <th>\(\alpha_t\) / 度</th>
+          <td class="blank">待测</td><td class="blank">待测</td><td class="blank">待测</td><td class="blank">待测</td><td class="blank">待测</td><td class="blank">待测</td><td class="blank">待测</td><td></td>
+        </tr>
+      </tbody>
+    </table>
+    <table>
+      <caption>表3 反应终了旋光度记录表</caption>
+      <thead>
+        <tr>
+          <th>测定次数</th>
+          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>平均值</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>\(\alpha_\infty\) / 度</th>
+          <td class="blank">待测</td><td class="blank">待测</td><td class="blank">待测</td><td class="blank">待测</td><td class="blank">待测</td><td class="blank">待计算</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>参考资料</h2>
+    <ol>
+      <li>当前实验文件夹：<code>source/旋光法测定蔗糖转化反应的速率常数讲义.md</code>。</li>
+      <li>当前实验文件夹：<code>source/材料物化实验报告模板.md</code>。</li>
+      <li><code>reference/reference-notes.md</code> 中整理的浙江科技大学物理化学实验资源和 Vanderbilt University “Inversion of Sucrose” 教学资料。</li>
+    </ol>
+  </section>
+</main>
+</body>
+</html>
