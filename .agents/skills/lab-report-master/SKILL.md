@@ -262,6 +262,11 @@ Open only the module needed for the current stage:
 Use `agents/reviewer.md` whenever generating or updating
 `analysis_report.html` or `postlab_report.html`.
 
+For data-processing and analysis, also read
+`references/calculation-chain-logic-rules.md`. The fifth report section must be
+reviewed as a known-to-unknown physical-quantity reasoning chain. Later-derived
+quantities must not appear before the step that creates them.
+
 ## Script Map
 
 Use bundled scripts when they fit the task:

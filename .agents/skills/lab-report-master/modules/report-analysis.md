@@ -162,6 +162,50 @@ analysis/processed/calculation_chain.md
 Use `scripts/analyze_data.py` only with an explicit analysis plan derived from
 `source/`. The script must not choose formulas by itself.
 
+### calculation_chain.md Reasoning Structure
+
+`calculation_chain.md` must be written as a dependency-ordered reasoning chain.
+It is not enough to list formulas. Every step must show how known physical
+quantities lead to unknown physical quantities.
+
+Use this structure:
+
+```markdown
+## Step 0: 已知量清单
+- 来自 verified_raw_data.csv 的量：
+- 来自 source/ 的常数、条件或参考值：
+- 用户已确认的外部参考值：
+
+## Step 1: [待求物理量名称]
+- 本步已知量：
+- 本步待求量：
+- 公式：
+- 公式来源：
+- 代入值及来源：
+- 单位换算：
+- 本步输出：
+- 输出供后续哪一步使用：
+
+## Step N: 最终结果与误差
+- 本步已知量：
+- 本步待求量：
+- 公式：
+- 公式来源：
+- 代入值及来源：
+- 单位换算：
+- 本步输出：
+- 结论边界：
+```
+
+Rules:
+
+- Do not use a quantity before it appears in `Step 0` or an earlier step.
+- Do not use fitting parameters before the fitting step.
+- Do not calculate relative error before both the experimental value and the
+  reference value are defined.
+- Do not discuss or conclude from a quantity that has not yet been calculated.
+- If a quantity cannot be traced, stop and ask the user.
+
 ## analysis_report.html Position
 
 `analysis_report.html` is the combined review package for:
@@ -204,6 +248,9 @@ Include:
 - 公式来源
 - 单位换算逻辑
 - 计算链
+- 计算链逻辑审查
+- 物理量依赖顺序表
+- 已知量到未知量推导说明
 - 关键中间计算表
 - 拟合结果
 - 误差分析
@@ -220,4 +267,3 @@ Include:
 
 If any required item is not applicable, state why. If it is unknown, stop rather
 than filling a placeholder.
-

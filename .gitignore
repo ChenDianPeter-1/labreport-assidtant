@@ -3,6 +3,8 @@
 
 # Keep this ignore policy tracked.
 !.gitignore
+!README.md
+!CHANGELOG.md
 
 # Track only the lab-report-master skill.
 !.agents/
