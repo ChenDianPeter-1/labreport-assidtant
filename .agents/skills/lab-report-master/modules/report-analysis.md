@@ -13,7 +13,6 @@ analysis/raw-data/review_state.json
 analysis/processed/processed_data.csv
 analysis/processed/summary_data.csv
 analysis/processed/calculation_chain.md
-analysis/report/analysis_report.html
 ```
 
 ## Entry And State Recovery
@@ -49,7 +48,7 @@ Stage behavior:
 - `prelab_done`: continue from raw-data review.
 - `raw_data_review_ready`: wait for or verify user confirmation.
 - `raw_data_confirmed`: begin formal analysis.
-- `analysis_report_ready`: wait for `审查通过`.
+- `analysis_step_reviewing`: wait for terminal step confirmation.
 - later stages: summarize the current stage and ask before rewinding.
 
 ## Raw-Data Review Stage
@@ -101,6 +100,14 @@ Do not include:
 The browser page is the user review surface. The canonical downstream data file
 is `analysis/raw-data/verified_raw_data.csv`.
 
+For transcription:
+
+- Use the user-provided table as the primary skeleton.
+- Do not semantically rename physical quantities.
+- Keep headers mostly Chinese and close to the raw record.
+- Do not add remarks/annotation columns unless strictly necessary for ambiguity.
+- Keep the table minimal; avoid bloated metadata.
+
 ### Save Mechanism
 
 Use `scripts/build_raw_data_review.py` to generate an HTML page whose buttons can:
@@ -146,10 +153,16 @@ After raw-data confirmation:
 2. Read the data-processing requirements from `source/`.
 3. Identify formulas, units, significant-figure rules, fitting requirements,
    reference values, and required output tables.
-4. If any of these are missing or unclear, stop and ask the user.
-5. Calculate averages, standard deviations, relative errors, unit conversions,
+4. Before each analysis operation, explain in terminal:
+   - what will be done
+   - why this step is needed
+   - input/output files
+   - main risk/boundary
+5. If any of these are missing or unclear, stop and ask the user.
+6. After user confirms the step logic in terminal, execute the step.
+7. Calculate averages, standard deviations, relative errors, unit conversions,
    transformed variables, and fitted parameters only when supported by `source/`.
-6. Preserve a traceable calculation chain.
+8. Preserve a traceable calculation chain.
 
 Required outputs:
 
@@ -206,40 +219,19 @@ Rules:
 - Do not discuss or conclude from a quantity that has not yet been calculated.
 - If a quantity cannot be traced, stop and ask the user.
 
-## analysis_report.html Position
+## Review Mode For Formal Analysis
 
-`analysis_report.html` is the combined review package for:
+After raw-data confirmation, use terminal step-by-step review only.
 
-- confirmed raw-data summary
-- data analysis
-- calculation chain
-- fitting and error analysis
-- figure rules
-- `nature-figure` plotting plan
-- embedded reviewer results
+- Do not create additional mandatory HTML review gates for:
+  - `calculation_chain_review.html`
+  - `analysis_results_review.html`
+  - `figure_handoff_review.html`
+- If a summary page is produced, treat it as optional artifact, not a user
+  approval gate.
+- The required approval chain is terminal-based step confirmation.
 
-Generate:
-
-```text
-analysis/report/analysis_report.html
-```
-
-After generating `analysis_report.html` and the figure handoff files, update
-`analysis/workflow_state.json`:
-
-```json
-{
-  "current_stage": "analysis_report_ready",
-  "analysis_report": "analysis/report/analysis_report.html",
-  "figure_handoff_dir": "analysis/figure-handoff",
-  "last_recommended_next_step": "请审查 analysis_report.html。通过后告诉 Codex：审查通过。"
-}
-```
-
-The page must be Chinese. Show the decision summary first. Put detailed
-calculation chains and reviewer items in `<details>` sections.
-
-## Required Sections
+## Required Sections For Terminal Review
 
 Include:
 
@@ -263,7 +255,7 @@ Include:
 - 是否符合 `source/` 要求
 - 是否参考 `reference/` 优化作图方案
 - 将要传给 `nature-figure` 的指令摘要
-- reviewer 内嵌审查结果
+- reviewer results when applicable
 
 If any required item is not applicable, state why. If it is unknown, stop rather
 than filling a placeholder.

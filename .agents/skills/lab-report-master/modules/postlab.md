@@ -15,24 +15,25 @@ All must be true:
 - raw data are confirmed
 - `analysis/raw-data/verified_raw_data.csv` exists
 - formal analysis is complete
-- `analysis/report/analysis_report.html` was reviewed and approved by the user
+- terminal step-by-step analysis review is complete and confirmed by the user
 - `nature-figure` has completed final figures
 - every required figure exists in `figures/`
 - `analysis/workflow_state.json` exists and is consistent with these outputs
 
 If any prerequisite is false, stop.
 
-## Content
+## Required Structure
 
-The postlab report may include:
+The postlab report must follow this section order:
 
-- 实验记录
-- 数据处理说明
-- 结果讨论
-- 误差分析
-- 思考题
-- 实验结论
-- 正式图表引用
+1. 实验目的
+2. 实验原理
+3. 实验装置、设备及试剂
+4. 实验步骤（预习准备工作）
+5. 实验记录（实验过程中的第一手材料）
+6. 数据处理与分析
+7. 实验结论
+8. 思考题
 
 Follow the report template and teacher requirements from `source/`.
 
@@ -43,6 +44,15 @@ Follow the report template and teacher requirements from `source/`.
 - Do not create image placeholders for missing figures.
 - Do not recalculate values in the writing stage.
 - Do not write beyond what the data support.
+- Continue postlab writing from prelab structure and language baseline.
+- In section 3 (实验装置、设备及试剂), do not use tables.
+- Generate section 5 (实验记录) only after raw-data transcription is confirmed.
+- Section 5 must reconstruct the real lab process in timeline style. If any
+  operation details are unclear, ask the user before writing.
+- In section 6 (数据处理与分析), begin with a short organization overview:
+  what phases are included, why this order is used, and how phase transitions
+  connect.
+- In section 6, each phase must state: input, operation, output, and boundary.
 - Error analysis must be specific and tied to experiment design, measurement
   limits, data scatter, instrument constraints, or source-supported factors. Do
   not use empty phrases such as only `人为误差`.

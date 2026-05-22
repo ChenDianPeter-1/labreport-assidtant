@@ -35,7 +35,7 @@ def build_html(headers: list[str], rows: list[dict[str, str]], csv_name: str) ->
     body_rows = []
     for index, row in enumerate(rows):
         cells = "\n".join(
-            f'<td contenteditable="true" data-field="{html.escape(h)}">{html.escape(row.get(h, ""))}</td>'
+            f'<td contenteditable="true" tabindex="0" data-field="{html.escape(h)}">{html.escape(row.get(h, ""))}</td>'
             for h in headers
         )
         body_rows.append(
@@ -78,6 +78,7 @@ def build_html(headers: list[str], rows: list[dict[str, str]], csv_name: str) ->
 
   <div class="toolbar">
     <button type="button" onclick="confirmAll()">全部确认</button>
+    <button type="button" onclick="chooseSaveDirectory()">选择保存目录并开启自动保存</button>
     <button type="button" onclick="saveReviewState()">保存 review_state.json</button>
     <button type="button" onclick="saveVerifiedCsv()">保存 verified_raw_data.csv</button>
   </div>
@@ -97,17 +98,23 @@ def build_html(headers: list[str], rows: list[dict[str, str]], csv_name: str) ->
 
   <details>
     <summary>保存说明</summary>
-    <p>如果浏览器允许直接保存文件，请把 JSON 保存为 <code>analysis/raw-data/review_state.json</code>，把 CSV 保存为 <code>analysis/raw-data/verified_raw_data.csv</code>。</p>
-    <p>如果浏览器只能下载文件，请把下载得到的两个文件移动到 <code>analysis/raw-data/</code> 后，再告诉 Codex：“我审查好了”。</p>
+    <p>推荐先点击“选择保存目录并开启自动保存”，选择本实验的 <code>analysis/raw-data/</code> 文件夹。之后每次确认行或全部确认，页面会尝试自动保存 <code>review_state.json</code>；当所有行确认后，也会自动保存 <code>verified_raw_data.csv</code>。</p>
+    <p>如果浏览器不允许直接写入文件夹，请使用手动保存按钮；若浏览器只能下载文件，请把下载得到的两个文件移动到 <code>analysis/raw-data/</code> 后，再告诉 Codex：“我审查好了”。</p>
+    <p>表格支持用方向键在可编辑单元格之间移动。编辑内容会临时保存在当前浏览器页面中，但正式后续计算仍以保存出的 <code>verified_raw_data.csv</code> 为准。</p>
   </details>
 
 <script>
 const HEADERS = {headers_json};
+const STORAGE_KEY = "raw-data-review:" + location.pathname;
+let directoryHandle = null;
+let autosaveEnabled = false;
 
 function confirmRow(index) {{
   const row = document.querySelector(`tr[data-row="${{index}}"]`);
   row.dataset.confirmed = "true";
   row.querySelector(".status").textContent = "已确认";
+  persistDraft();
+  autoSaveOutputs();
 }}
 
 function confirmAll() {{
@@ -139,7 +146,32 @@ function makeCsv(rows) {{
   return "\\ufeff" + lines.join("\\n");
 }}
 
-async function saveText(suggestedName, text, mime) {{
+async function chooseSaveDirectory() {{
+  if (!window.showDirectoryPicker) {{
+    alert("当前浏览器不支持直接选择保存目录，请继续使用手动保存或下载方式。");
+    return;
+  }}
+  directoryHandle = await window.showDirectoryPicker();
+  autosaveEnabled = true;
+  alert("已开启自动保存。请确认目录是 analysis/raw-data/。");
+  await autoSaveOutputs();
+}}
+
+async function saveTextToDirectory(suggestedName, text) {{
+  if (!directoryHandle) return false;
+  const handle = await directoryHandle.getFileHandle(suggestedName, {{ create: true }});
+  const writable = await handle.createWritable();
+  await writable.write(text);
+  await writable.close();
+  return true;
+}}
+
+async function saveText(suggestedName, text, mime, quiet = false) {{
+  if (directoryHandle) {{
+    await saveTextToDirectory(suggestedName, text);
+    if (!quiet) alert(`已保存 ${{suggestedName}}`);
+    return;
+  }}
   if (window.showSaveFilePicker) {{
     const handle = await window.showSaveFilePicker({{
       suggestedName,
@@ -148,7 +180,7 @@ async function saveText(suggestedName, text, mime) {{
     const writable = await handle.createWritable();
     await writable.write(text);
     await writable.close();
-    alert(`已保存 ${{suggestedName}}`);
+    if (!quiet) alert(`已保存 ${{suggestedName}}`);
   }} else {{
     const blob = new Blob([text], {{ type: mime }});
     const url = URL.createObjectURL(blob);
@@ -180,6 +212,73 @@ async function saveVerifiedCsv() {{
   }}
   await saveText("verified_raw_data.csv", makeCsv(rows), "text/csv");
 }}
+
+async function autoSaveOutputs() {{
+  if (!autosaveEnabled || !directoryHandle) return;
+  const rows = collectRows();
+  const state = {{
+    saved_at: new Date().toISOString(),
+    total_rows: rows.length,
+    confirmed_rows: rows.filter((r) => r.confirmed).length,
+    rows: rows.map((r) => ({{ index: r.index, confirmed: r.confirmed }})),
+  }};
+  await saveText("review_state.json", JSON.stringify(state, null, 2), "application/json", true);
+  if (rows.every((r) => r.confirmed)) {{
+    await saveText("verified_raw_data.csv", makeCsv(rows), "text/csv", true);
+  }}
+}}
+
+function persistDraft() {{
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(collectRows()));
+}}
+
+function restoreDraft() {{
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (!saved) return;
+  try {{
+    const rows = JSON.parse(saved);
+    rows.forEach((savedRow) => {{
+      const row = document.querySelector(`tr[data-row="${{savedRow.index}}"]`);
+      if (!row) return;
+      row.dataset.confirmed = savedRow.confirmed ? "true" : "false";
+      row.querySelector(".status").textContent = savedRow.confirmed ? "已确认" : "待确认";
+      HEADERS.forEach((h) => {{
+        const cell = row.querySelector(`[data-field="${{CSS.escape(h)}}"]`);
+        if (cell && savedRow.values && savedRow.values[h] !== undefined) cell.textContent = savedRow.values[h];
+      }});
+    }});
+  }} catch (error) {{
+    console.warn("无法恢复本地草稿", error);
+  }}
+}}
+
+function moveCell(cell, dRow, dCol) {{
+  const row = cell.closest("tr");
+  const rows = Array.from(document.querySelectorAll("tbody tr"));
+  const cells = Array.from(row.querySelectorAll('td[contenteditable="true"]'));
+  const rowIndex = rows.indexOf(row);
+  const colIndex = cells.indexOf(cell);
+  const nextRow = rows[Math.max(0, Math.min(rows.length - 1, rowIndex + dRow))];
+  if (!nextRow) return;
+  const nextCells = Array.from(nextRow.querySelectorAll('td[contenteditable="true"]'));
+  const nextCell = nextCells[Math.max(0, Math.min(nextCells.length - 1, colIndex + dCol))];
+  if (nextCell) nextCell.focus();
+}}
+
+document.addEventListener("keydown", (event) => {{
+  const cell = event.target.closest?.('td[contenteditable="true"]');
+  if (!cell) return;
+  if (event.key === "ArrowUp") {{ event.preventDefault(); moveCell(cell, -1, 0); }}
+  if (event.key === "ArrowDown") {{ event.preventDefault(); moveCell(cell, 1, 0); }}
+  if (event.key === "ArrowLeft" && window.getSelection().toString() === "") {{ moveCell(cell, 0, -1); }}
+  if (event.key === "ArrowRight" && window.getSelection().toString() === "") {{ moveCell(cell, 0, 1); }}
+}});
+
+document.addEventListener("input", (event) => {{
+  if (event.target.closest?.('td[contenteditable="true"]')) persistDraft();
+}});
+
+restoreDraft();
 </script>
 </body>
 </html>

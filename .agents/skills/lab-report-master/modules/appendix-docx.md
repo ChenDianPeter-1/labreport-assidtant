@@ -17,7 +17,7 @@ By default, extract only final tables and figures used in:
 reports/postlab_report.html
 ```
 
-Do not include intermediate calculation tables from `analysis_report.html`
+Do not include intermediate calculation tables from draft analysis artifacts
 unless the user explicitly asks.
 
 ## Format Rules

@@ -10,6 +10,15 @@ It must provide:
 - save/export `review_state.json`
 - save/export `verified_raw_data.csv`
 
+Transcription constraints:
+
+- Start from the user-provided raw-data table skeleton.
+- Do not semantically rename physical quantities.
+- Keep physical quantity labels mostly Chinese and close to the raw record.
+- Do not add remarks/notes columns unless strictly necessary for ambiguity.
+- Keep review table minimal and compact. Do not include confidence scores or
+  bulky metadata.
+
 The downstream analysis reads only:
 
 ```text

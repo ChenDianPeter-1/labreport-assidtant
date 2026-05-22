@@ -118,7 +118,6 @@ analysis/raw-data/review_state.json
 analysis/processed/processed_data.csv
 analysis/processed/summary_data.csv
 analysis/processed/calculation_chain.md
-analysis/report/analysis_report.html
 analysis/figure-handoff/figure_input_specification.md
 analysis/figure-handoff/plotting_constraints.md
 analysis/figure-handoff/nature_figure_prompt.md
@@ -133,7 +132,6 @@ Allowed HTML outputs are limited to:
 ```text
 reports/prelab_report.html
 analysis/raw-data/raw_data_review.html
-analysis/report/analysis_report.html
 reports/postlab_report.html
 ```
 
@@ -148,7 +146,6 @@ experiment/
 +-- analysis/
 |   +-- raw-data/
 |   +-- processed/
-|   +-- report/
 |   +-- figure-handoff/
 |   `-- workflow_state.json
 +-- figures/
@@ -226,23 +223,23 @@ After data processing starts, preserve this order:
 5. Execute calculations, fitting, unit conversion, significant figures, and error
    analysis.
 6. Prepare `nature-figure` input rules and the plotting plan.
-7. Generate `analysis/report/analysis_report.html`.
-8. User reviews `analysis_report.html`.
-9. User tells Codex: `审查通过`.
-10. Automatically invoke `nature-figure` with the generated handoff package.
-11. `nature-figure` uses Python to produce figures in `figures/` and scripts in
+7. Run formal analysis review in terminal step-by-step mode. For each key step:
+   explain input/operation/output/risk, then wait for user confirmation.
+8. Automatically invoke `nature-figure` with the generated handoff package after
+   terminal review confirmations.
+9. `nature-figure` uses Python to produce figures in `figures/` and scripts in
     `scripts/`.
-12. Check that required figure files exist.
-13. Generate `reports/postlab_report.html`.
-14. Run reviewer checks and embed results in `postlab_report.html`.
-15. Extract final adopted tables and figures from `postlab_report.html`.
-16. Generate `reports/appendix_figures_tables.docx`.
-17. Render-check the DOCX and fix obvious layout issues before delivery.
+10. Check that required figure files exist.
+11. Generate `reports/postlab_report.html`.
+12. Run reviewer checks and embed results in `postlab_report.html`.
+13. Extract final adopted tables and figures from `postlab_report.html`.
+14. Generate `reports/appendix_figures_tables.docx`.
+15. Render-check the DOCX and fix obvious layout issues before delivery.
 
 Only two major user approval gates are allowed:
 
 - raw-data confirmation via `raw_data_review.html`
-- analysis and figure-plan approval via `analysis_report.html`
+- terminal step-by-step analysis review confirmations
 
 Do not ask the user to manually copy the figure handoff into `nature-figure`.
 
@@ -260,7 +257,7 @@ Open only the module needed for the current stage:
 | Appendix DOCX | `modules/appendix-docx.md` |
 
 Use `agents/reviewer.md` whenever generating or updating
-`analysis_report.html` or `postlab_report.html`.
+`postlab_report.html`.
 
 For data-processing and analysis, also read
 `references/calculation-chain-logic-rules.md`. The fifth report section must be
@@ -303,13 +300,14 @@ state:
 - Save reproducible plotting scripts to `scripts/`.
 - Do not modify confirmed raw data.
 - Do not recalculate, refit, remove outliers, or change approved conclusions.
+- Figure titles must not be drawn inside figure canvases.
+- Scientific notation should follow human report style in labels and annotations.
+- Group distinction must use at least shape + color dual encoding.
 
 ## Reviewer Embedding
 
-The reviewer does not create standalone review HTML by default. It embeds:
-
-- analysis review into `analysis/report/analysis_report.html`
-- final report review into `reports/postlab_report.html`
+The reviewer does not create standalone review HTML by default. It embeds final
+review into `reports/postlab_report.html`.
 
 Reviewer sections must show a short summary first and place detailed checks in
 collapsible `<details>` blocks. Use these status markers:

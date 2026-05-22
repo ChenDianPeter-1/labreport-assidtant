@@ -47,6 +47,8 @@ If the template or teacher requirement uses different section names, follow
 - Do not include results, data processing, error analysis, discussion, or final
   conclusions in the prelab report.
 - If a required section cannot be supported by `source/`, stop and ask the user.
+- In prelab, the instrument/reagent section must use concise paragraph or list
+  form. Do not use tables for this section.
 
 ## HTML Requirements
 
@@ -57,8 +59,8 @@ reports/prelab_report.html
 ```
 
 The page should be Chinese, compact, printable, and easy to copy into a report.
-Use simple CSS, readable headings, and ordinary tables where needed. Do not make
-a dashboard or require a server.
+Use simple CSS and readable headings. Do not make a dashboard or require a
+server.
 
 ## Recommended Process
 

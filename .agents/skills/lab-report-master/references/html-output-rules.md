@@ -5,7 +5,6 @@ Allowed HTML files:
 ```text
 reports/prelab_report.html
 analysis/raw-data/raw_data_review.html
-analysis/report/analysis_report.html
 reports/postlab_report.html
 ```
 

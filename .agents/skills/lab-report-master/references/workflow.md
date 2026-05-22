@@ -47,14 +47,17 @@ create one and mark that the workflow started from analysis.
 1. Generate `analysis/raw-data/raw_data_review.html` and provisional CSV.
 2. Wait for the user to confirm raw data and say `我审查好了`.
 3. Read `analysis/raw-data/verified_raw_data.csv`.
-4. Analyze data and generate processed outputs.
-5. Prepare figure handoff files.
-6. Generate `analysis/report/analysis_report.html`.
-7. Wait for the user to say `审查通过`.
-8. Invoke `nature-figure` with Python using the handoff files.
-9. Verify required figures exist.
-10. Generate and review `reports/postlab_report.html`.
-11. Generate and render-check `reports/appendix_figures_tables.docx`.
+4. Run formal analysis in terminal step-by-step mode:
+   - explain each step's input/operation/output/risk
+   - get user confirmation for key steps
+   - then execute the step
+5. Generate processed outputs and figure handoff files.
+6. Invoke `nature-figure` with Python using the handoff files.
+7. Verify required figures exist.
+8. Generate and review `reports/postlab_report.html`.
+9. Generate and render-check `reports/appendix_figures_tables.docx`.
 
-Only the raw-data review and analysis-report review are major user approval
-gates.
+Major approval gates:
+
+- `raw_data_review.html` (the only HTML review gate)
+- terminal step-by-step analysis review confirmations
